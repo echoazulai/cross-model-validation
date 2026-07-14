@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "verdict": {
+      "type": "string",
+      "enum": ["pass", "needs-changes", "fail"]
+    },
+    "summary": {
+      "type": "string",
+      "description": "One-line bottom line."
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "severity": { "type": "string", "enum": ["high", "medium", "low"] },
+          "location": { "type": "string" },
+          "detail": { "type": "string" }
+        },
+        "required": ["severity", "location", "detail"]
+      }
+    },
+    "checked": {
+      "type": "string",
+      "description": "What the judge claims it inspected. This is structured context, not execution proof."
+    },
+    "executions": {
+      "type": "array",
+      "description": "Optional judge claims about commands. Bridge check-results.json remains authoritative.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "command": { "type": "string" },
+          "exit_code": { "type": ["integer", "null"] },
+          "evidence": { "type": "string" }
+        },
+        "required": ["command", "exit_code", "evidence"]
+      }
+    },
+    "reviewed_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "kind": { "type": "string", "enum": ["repo-diff", "artifact"] },
+        "base_sha": { "type": ["string", "null"] },
+        "reviewed_sha": { "type": ["string", "null"] },
+        "payload_sha256": { "type": ["string", "null"] }
+      },
+      "required": ["kind", "base_sha", "reviewed_sha", "payload_sha256"]
+    }
+  },
+  "required": ["verdict", "summary", "findings", "checked", "executions", "reviewed_identity"]
+}
